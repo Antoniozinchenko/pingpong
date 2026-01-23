@@ -19,6 +19,7 @@ class PingPongGame extends FlameGame
   int record = 0;
   late final ScoreText scoreText;
   late final RecordText recordText;
+  late final LevelText levelText;
 
   int currentLevelIndex = 0;
 
@@ -30,9 +31,11 @@ class PingPongGame extends FlameGame
     pausedText = PausedText();
     scoreText = ScoreText();
     recordText = RecordText();
+    levelText = LevelText();
 
     add(scoreText);
     add(recordText);
+    add(levelText);
 
     _loadLevel(0);
   }
@@ -42,6 +45,7 @@ class PingPongGame extends FlameGame
       index = 0;
     }
     currentLevelIndex = index;
+    levelText.updateLevel(currentLevelIndex + 1);
 
     // Clear existing level cleanup
     children.whereType<Brick>().forEach((b) => b.removeFromParent());

@@ -72,3 +72,28 @@ class RecordText extends TextComponent with HasGameReference<PingPongGame> {
     text = 'Record: $record';
   }
 }
+
+class LevelText extends TextComponent with HasGameReference<PingPongGame> {
+  LevelText()
+      : super(
+          text: 'Level: 1',
+          textRenderer: TextPaint(
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+          anchor: Anchor.topLeft,
+          priority: 100,
+        );
+
+  @override
+  void onLoad() {
+    super.onLoad();
+    position = Vector2(20, 20);
+  }
+
+  void updateLevel(int level) {
+    text = 'Level: $level';
+  }
+}
