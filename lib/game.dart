@@ -11,15 +11,16 @@ import 'utils/game_utils.dart';
 import 'levels/levels.dart';
 
 class PingPongGame extends FlameGame
-    with HasKeyboardHandlerComponents, HasCollisionDetection {
+    with HasKeyboardHandlerComponents, HasCollisionDetection, TapDetector {
   bool isPaused = false;
+  bool isIntro = true;
   late final PausedText pausedText;
+  late final InstructionsText instructionsText;
 
   int score = 0;
   int record = 0;
   late final ScoreText scoreText;
   late final RecordText recordText;
-  late final LevelText levelText;
 
   int currentLevelIndex = 0;
 
@@ -29,13 +30,16 @@ class PingPongGame extends FlameGame
 
     // UI Components
     pausedText = PausedText();
+    instructionsText = InstructionsText();
     scoreText = ScoreText();
     recordText = RecordText();
-    levelText = LevelText();
 
     add(scoreText);
     add(recordText);
-    add(levelText);
+    add(instructionsText);
+
+    isPaused = true;
+    isIntro = true;
 
     _loadLevel(0);
   }
@@ -45,7 +49,6 @@ class PingPongGame extends FlameGame
       index = 0;
     }
     currentLevelIndex = index;
-    levelText.updateLevel(currentLevelIndex + 1);
 
     // Clear existing level cleanup
     children.whereType<Brick>().forEach((b) => b.removeFromParent());
@@ -71,6 +74,10 @@ class PingPongGame extends FlameGame
     if (isPaused) {
       isPaused = false;
       if (pausedText.parent != null) remove(pausedText);
+      if (isIntro) {
+        isIntro = false;
+        if (instructionsText.parent != null) remove(instructionsText);
+      }
     }
 
     _loadLevel(0);
@@ -88,8 +95,6 @@ class PingPongGame extends FlameGame
     } else {
       super.update(dt);
 
-      // Check for level completion
-      // We check if we have initialized the level (ball exists) but ran out of bricks
       if (children.whereType<Ball>().isNotEmpty &&
           children.whereType<Brick>().isEmpty) {
         _loadLevel(currentLevelIndex + 1);
@@ -97,16 +102,32 @@ class PingPongGame extends FlameGame
     }
   }
 
-  @override
-  KeyEventResult onKeyEvent(
-      KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.space) {
+  void _handleInput() {
+    if (isIntro) {
+      if (instructionsText.parent != null) remove(instructionsText);
+      isIntro = false;
+      isPaused = false;
+    } else {
       isPaused = !isPaused;
       if (isPaused) {
         add(pausedText);
       } else {
         remove(pausedText);
       }
+    }
+  }
+
+  @override
+  void onTapDown(TapDownInfo info) {
+    super.onTapDown(info);
+    _handleInput();
+  }
+
+  @override
+  KeyEventResult onKeyEvent(
+      KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.space) {
+      _handleInput();
     }
     return super.onKeyEvent(event, keysPressed);
   }

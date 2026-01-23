@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../game.dart';
 
@@ -73,27 +74,33 @@ class RecordText extends TextComponent with HasGameReference<PingPongGame> {
   }
 }
 
-class LevelText extends TextComponent with HasGameReference<PingPongGame> {
-  LevelText()
+class InstructionsText extends TextComponent
+    with HasGameReference<PingPongGame> {
+  InstructionsText()
       : super(
-          text: 'Level: 1',
+          text: _getInstructions(),
           textRenderer: TextPaint(
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 32,
+              height: 1.5,
             ),
           ),
-          anchor: Anchor.topLeft,
+          anchor: Anchor.center,
           priority: 100,
         );
+
+  static String _getInstructions() {
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS) {
+      return 'Controls:\nTilt to Move\nTap to Start/Pause';
+    }
+    return 'Controls:\nLeft/Right Arrows to Move\nSpace to Start/Pause';
+  }
 
   @override
   void onLoad() {
     super.onLoad();
-    position = Vector2(20, 20);
-  }
-
-  void updateLevel(int level) {
-    text = 'Level: $level';
+    position = game.size / 2;
   }
 }
