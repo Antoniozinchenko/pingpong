@@ -18,7 +18,7 @@ class Player extends RectangleComponent
   Player()
       : super(
           paint: Paint()..color = Colors.white,
-          size: Vector2(300, 20),
+          size: Vector2(200, 20),
           anchor: Anchor.center,
         );
 
@@ -34,9 +34,10 @@ class Player extends RectangleComponent
 
     if (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS) {
-      // Use gyroscope as requested by user.
-      // Detecting rotation rate around Y axis.
-      _subscription = gyroscopeEventStream().listen((GyroscopeEvent event) {
+      // Use accelerometer as requested by user.
+      // Detecting gravity on Y axis.
+      _subscription =
+          accelerometerEventStream().listen((AccelerometerEvent event) {
         _sensorInput = event.y;
       });
     }
@@ -67,9 +68,10 @@ class Player extends RectangleComponent
     double input = _horizontalDirection.toDouble();
 
     // Add sensor input
-    // Amplify small rotation rates for responsiveness
+    // Accelerometer values allow for position control based on tilt
     if (_sensorInput.abs() > 0.5) {
-      input += _sensorInput * 3.0;
+      // Divide by a factor to normalize range (e.g. 10 -> 2)
+      input += _sensorInput * 0.2;
     }
 
     if (input != 0) {
