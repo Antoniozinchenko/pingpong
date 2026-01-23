@@ -36,8 +36,7 @@ class Player extends RectangleComponent
         defaultTargetPlatform == TargetPlatform.iOS) {
       // Use accelerometer as requested by user.
       // Detecting gravity on Y axis.
-      _subscription =
-          accelerometerEventStream().listen((AccelerometerEvent event) {
+      _subscription = gyroscopeEventStream().listen((GyroscopeEvent event) {
         _sensorInput = event.y;
       });
     }
