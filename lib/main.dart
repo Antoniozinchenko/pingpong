@@ -16,8 +16,8 @@ class GameApp extends StatelessWidget {
       title: 'Ping Pong',
       home: Center(
         child: SizedBox(
-          width: 800,
-          height: 1200,
+          width: 600,
+          height: 800,
           child: GameWidget(game: PingPongGame()),
         ),
       ),
