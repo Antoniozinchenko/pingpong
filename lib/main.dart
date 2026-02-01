@@ -14,8 +14,13 @@ class GameApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ping Pong',
-      theme: ThemeData.dark(),
-      home: GameWidget(game: PingPongGame()),
+      home: Center(
+        child: SizedBox(
+          width: 800,
+          height: 1200,
+          child: GameWidget(game: PingPongGame()),
+        ),
+      ),
     );
   }
 }

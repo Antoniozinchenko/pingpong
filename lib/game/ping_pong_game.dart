@@ -17,7 +17,7 @@ class PingPongGame extends FlameGame
   bool isPaused = false;
 
   @override
-  Color backgroundColor() => const Color(0xFF000000); // Black background
+  Color backgroundColor() => const Color.fromARGB(255, 4, 1, 31);
 
   @override
   Future<void> onLoad() async {
